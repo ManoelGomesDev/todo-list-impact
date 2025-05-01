@@ -10,11 +10,23 @@ export default function Home() {
 
   const [tasks, setTasks] = useState<string[]>([])
   const [task, setTask] = useState<string>("")
- 
+  const [favoriteTasks, setFavoriteTasks] = useState<string[]>([])
   const handleAddTask = (task: string) => {
 
     setTasks([...tasks, task])
     setTask("")
+  }
+
+  const handleFavoriteTask = (task: string) => {
+    if (favoriteTasks.includes(task)) {
+      setFavoriteTasks(favoriteTasks.filter((t) => t !== task))
+    } else {
+      setFavoriteTasks([...favoriteTasks, task])
+    }
+  }
+
+  const handleDeleteTask = (task: string) => {
+    setTasks(tasks.filter((t) => t !== task))
   }
 
   return (
@@ -31,17 +43,17 @@ export default function Home() {
         <Tabs defaultValue="all" className="w-[400px] bg-white rounded-md p-2">
           <TabsList className="w-full  grid-cols-2">
           <TabsTrigger value="all">Todas</TabsTrigger>
-          <TabsTrigger value="favorite">Favoritas</TabsTrigger>
+          <TabsTrigger value="favorite">Favoritas ({favoriteTasks.length})</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="flex flex-col gap-2">
             {tasks.map((task) => (
-              <CardTask key={task} task={task} />
+              <CardTask key={task} task={task} isFavorite={favoriteTasks.includes(task)} onFavorite={handleFavoriteTask} onDelete={handleDeleteTask}/>
             ))}
           </TabsContent>
-          <TabsContent value="favorite">
-            <div>
-              <h1>Favoritas</h1>
-            </div>
+          <TabsContent value="favorite" >
+            {favoriteTasks.map((task) => (
+              <CardTask key={task} task={task} isFavorite={favoriteTasks.includes(task)} onFavorite={handleFavoriteTask} onDelete={handleDeleteTask}/>
+            ))}
           </TabsContent>
         </Tabs>
       </div>
