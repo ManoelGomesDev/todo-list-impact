@@ -5,28 +5,29 @@ import { Plus } from "lucide-react";
 import { Tabs, TabsTrigger, TabsList, TabsContent } from "@/components/ui/tabs";
 import { useState } from "react";
 import { CardTask } from "@/components/cardTask";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addTask, deleteTask, favoriteTask } from "@/store/todoslice";
 
 export default function Home() {
 
-  const [tasks, setTasks] = useState<string[]>([])
-  const [task, setTask] = useState<string>("")
-  const [favoriteTasks, setFavoriteTasks] = useState<string[]>([])
-  const handleAddTask = (task: string) => {
+  const dispatch = useDispatch()
+  const tasks = useSelector((state: any) => state.todos.tasks)
+  const favoriteTasks = useSelector((state: any) => state.todos.favoriteTasks)
 
-    setTasks([...tasks, task])
+  const [task, setTask] = useState<string>("")
+  
+  const handleAddTask = (task: string) => {
+    dispatch(addTask(task))
     setTask("")
+  }
+  
+  const handleDeleteTask = (task: string) => {
+    dispatch(deleteTask(task))
   }
 
   const handleFavoriteTask = (task: string) => {
-    if (favoriteTasks.includes(task)) {
-      setFavoriteTasks(favoriteTasks.filter((t) => t !== task))
-    } else {
-      setFavoriteTasks([...favoriteTasks, task])
-    }
-  }
-
-  const handleDeleteTask = (task: string) => {
-    setTasks(tasks.filter((t) => t !== task))
+    dispatch(favoriteTask(task))
   }
 
   return (
@@ -46,12 +47,12 @@ export default function Home() {
           <TabsTrigger value="favorite">Favoritas ({favoriteTasks.length})</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="flex flex-col gap-2">
-            {tasks.map((task) => (
+            {tasks.map((task: string) => (
               <CardTask key={task} task={task} isFavorite={favoriteTasks.includes(task)} onFavorite={handleFavoriteTask} onDelete={handleDeleteTask}/>
             ))}
           </TabsContent>
           <TabsContent value="favorite" >
-            {favoriteTasks.map((task) => (
+            {favoriteTasks.map((task: string) => (
               <CardTask key={task} task={task} isFavorite={favoriteTasks.includes(task)} onFavorite={handleFavoriteTask} onDelete={handleDeleteTask}/>
             ))}
           </TabsContent>
