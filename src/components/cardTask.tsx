@@ -8,13 +8,14 @@ import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 
 
 interface CardTaskProps {
+
     task: string
     isFavorite: boolean
     onFavorite: (task: string) => void
     onDelete: (task: string) => void
 }
 
-export function CardTask({ task, isFavorite, onFavorite, onDelete }: CardTaskProps) {
+export function CardTask({  task, isFavorite, onFavorite, onDelete }: CardTaskProps) {
 
     const handleFavoriteTask = () => {
         onFavorite(task)
